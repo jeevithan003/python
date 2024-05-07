@@ -1,3 +1,2 @@
-r=[12,3,4,4,5,6,6,7,8,9,9]
-
-print(help(r))
+def mbappe():
+    print("vamoss!!!")
