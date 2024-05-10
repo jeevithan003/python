@@ -1,18 +1,34 @@
-class Person:
-  def __init__(self, fname, lname):
-    self.firstname = fname
-    self.lastname = lname
+# app.py (main application file)
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 
-  def printname(self):
-    print(self.firstname, self.lastname)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///academic_system.db'
+db = SQLAlchemy(app)
 
-class Student(Person):
-  def __init__(self, fname, lname, year):
-    super().__init__(fname, lname)
-    self.graduationyear = year
+# Model definitions
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    # Add more student fields as needed
 
-  def welcome(self):
-    print("Welcome", self.firstname, self.lastname, "to the class of", self.graduationyear)
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    instructor = db.Column(db.String(100), nullable=False)
+    # Add more course fields as needed
 
-x = Student("Mike", "Olsen", 2019)
-x.welcome()
+# Route definitions
+@app.route('/')
+def index():
+    students = Student.query.all()
+    courses = Course.query.all()
+    return render_template('index.html', students=students, courses=courses)
+
+# Add more routes for CRUD operations on students and courses
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
