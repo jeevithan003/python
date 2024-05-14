@@ -1,1 +1,1 @@
-print(help("modules"))
+@staticmethod
